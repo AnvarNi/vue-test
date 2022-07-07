@@ -1,18 +1,24 @@
 <template>
   <div>
-    <form @submit.prevent>
+    <form v-for="(company, index) in companies" :key="index" @submit.prevent>
       <input v-model="company.name" type="text" placeholder="наименование" class="input">
       <input v-model="company.address" type="text" placeholder="адрес" class="input">
       <input v-model="company.ogrn" type="number" placeholder="огрн" class="input">
       <input v-model="company.inn" type="number" placeholder="инн" class="input">
       <input v-model="company.date" type="text" placeholder="дата регистрации" class="input">
-      <button @click="addCompany" class="btn btn-primary rounded">Добавить</button>
+      <button @click="addCompany" class="btn btn-warning rounded-0">Изменить</button>
     </form>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    companies: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
       company: {
