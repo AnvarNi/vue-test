@@ -8,26 +8,41 @@
           <th scope="col">ОГРН</th>
           <th scope="col">ИНН</th>
           <th scope="col">Дата регистрации</th>
-          <th scope="col">Изменить</th>
-          <th scope="col">Удалить</th>
+          <th scope="col">Изменить/Удалить</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(company, index) in companies" :key="index">
-          <td>{{company.name}}</td>
-          <td>{{company.address}}</td>
-          <td>{{company.ogrn}}</td>
-          <td>{{company.inn}}</td>
-          <td>{{company.date}}</td>
-          <td>
-            <div @click="editCompany(index)">
-              <span class="fa fa-pen"></span>
-            </div>
+        <tr v-for="company in companies" :key="company.id">
+          <td v-if="editing === company.id">
+            <input type="text" v-model="company.name" />
           </td>
-          <td>
-            <div @click="deleteCompany(index)">
-              <span class="fa fa-trash"></span>
-            </div>
+          <td v-else>{{company.name}}</td>
+          <td v-if="editing === company.id">
+            <input type="text" v-model="company.address" />
+          </td>
+          <td v-else>{{company.address}}</td>
+          <td v-if="editing === company.id">
+            <input type="text" v-model="company.ogrn" />
+          </td>
+          <td v-else>{{company.ogrn}}</td>
+          <td v-if="editing === company.id">
+            <input type="text" v-model="company.inn" />
+          </td>
+          <td v-else>{{company.inn}}</td>
+          <td v-if="editing === company.id">
+            <input type="text" v-model="company.date" />
+          </td>
+          <td v-else>{{company.date}}</td>
+          <td v-if="editing === company.id">
+            <button type="button" @click="editCompamy(company)">Сохранить</button>
+          </td>
+          <td v-else>
+            <button type="button" @click="editMode(company.id)" class="btn btn-primary">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button type="button" @click="$emit('delete', company.id)" class="btn btn-danger">
+              <i class="fas fa-trash-alt"></i>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -36,7 +51,13 @@
 </template>
 
 <script>
+
 export default {
+  data() {
+    return {
+      editing: null
+    };
+  },
   props: {
     companies: {
       type: Array,
@@ -44,16 +65,26 @@ export default {
     }
   },
   methods: {
-    deleteCompany(index) {
-      this.companies.splice(index, 1);
+    editMode(index) {
+      this.editing = index;
     },
-    editCompany(index) {
-
+    editCompamy(company) {
+      if (company.name === "" || company.address === "" || company.ogrn === "" || company.inn === "" || company.date === "")
+        return;
+      this.$emit("edit", company.id, company);
+      this.editing = null;
     }
   }
 }
 </script>
 
 <style>
-
+table, th, td {
+  text-align: center;
+  border: none;
+  font-size: 1.1em;
+}
+thead {
+  background-color: #56ccb8;
+}
 </style>

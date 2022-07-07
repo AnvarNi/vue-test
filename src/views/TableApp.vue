@@ -1,7 +1,7 @@
 <template>
   <div class="app">
-    <h2 class="text-center mt-5">Список компаний</h2>
-    <button @click="showWindow" class="btn btn-warning rounded-0">Добавить</button>
+    <h1 class="text-center mt-5">Список компаний</h1>
+    <button @click="showWindow" class="btn btn-primary rounded">Добавить</button>
     <window-form v-model:show="windowVisible">
       <add-form 
         @add="addCompany"
@@ -9,6 +9,8 @@
     </window-form>
     <company-table 
       :companies="companies"
+      @delete="deleteCompany"
+      @edit="editCompamy"
     />
   </div>
 </template>
@@ -29,16 +31,9 @@ export default {
         {
           name: 'компания1',
           address: 'улица1',
-          ogrn: '11',
-          inn: '111',
+          ogrn: '1',
+          inn: '11',
           date: '01.01.2022'
-        },
-        {
-          name: 'компания2',
-          address: 'улица2',
-          ogrn: '22',
-          inn: '222',
-          date: '02.02.2022'
         }
       ],
       windowVisible: false,
@@ -49,18 +44,27 @@ export default {
       this.companies.push(company);
       this.windowVisible = false;
     },
+    deleteCompany(id) {
+      this.companies = this.companies.filter(company => company.id !== id)
+    },
+    editCompany(id, updateCompany) {
+      this.companies = this.companies.map(company => company.id === id ? updateCompany : company);
+    },
     showWindow() {
       this.windowVisible = true;
     },
     inputName(event) {
       this.name = event.target.value;
-    }
+    },
   }
 }
 </script>
 
 <style>
-  .app {
-    padding: 20px;
-  }
+.app {
+  padding: 20px;
+}
+.btn {
+  margin-bottom: 20px;
+}
 </style>
